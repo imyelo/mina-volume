@@ -1,6 +1,7 @@
 const path = require('path')
 const vfs = require('vinyl-fs')
 const through = require('through2')
+const posix = require('ensure-posix-path')
 
 const CWD = path.resolve(__dirname, './example/mina')
 const OUTPUT_ROOT = path.resolve(__dirname, './example/volume')
@@ -12,7 +13,7 @@ function snapshot (filename) {
   let latest
   return through.obj((file, encoding, callback) => {
     if (file.isBuffer()) {
-      volume[`/${file.relative}`] = file.contents.toString()
+      volume[`/${posix(file.relative)}`] = file.contents.toString()
     }
 
     latest = file
