@@ -40,7 +40,7 @@ function walk () {
      * text
      */
     new Promise((resolve, reject) => {
-      vfs.src(['./**/*.@(js|json|wxml|wxss)'], { cwd: CWD })
+      vfs.src(['./**/*.@(js|json|wxml|wxss)'], { cwd: CWD, nodir: true })
         .pipe(snapshot(OUTPUT_VOLUME_FILENAME))
         .pipe(vfs.dest(OUTPUT_ROOT))
         .on('error', (error) => reject(error))
@@ -50,7 +50,7 @@ function walk () {
      * buffer
      */
     new Promise((resolve, reject) => {
-      vfs.src(['./**/*.!(js|json|wxml|wxss)'], { cwd: CWD })
+      vfs.src(['./**/*.!(js|json|wxml|wxss)'], { cwd: CWD, nodir: true })
         .pipe(vfs.dest(path.join(OUTPUT_ROOT, OUTPUT_STATIC_DIRNAME)))
         .on('error', (error) => reject(error))
         .on('end', () => resolve())
