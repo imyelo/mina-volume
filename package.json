@@ -16,8 +16,11 @@
   },
   "homepage": "https://github.com/imyelo/mina-volume#readme",
   "dependencies": {
+    "co": "^4.6.0",
+    "del": "^3.0.0",
     "ensure-posix-path": "^1.0.2",
     "through2": "^3.0.0",
+    "undertaker": "^1.2.0",
     "vinyl-fs": "^3.0.3"
   }
 }

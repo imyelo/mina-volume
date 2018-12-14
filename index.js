@@ -2,6 +2,9 @@ const path = require('path')
 const vfs = require('vinyl-fs')
 const through = require('through2')
 const posix = require('ensure-posix-path')
+const Undertaker = require('undertaker')
+const del = require('del')
+const co = require('co')
 
 const CWD = path.resolve(__dirname, './example/mina')
 const OUTPUT_ROOT = path.resolve(__dirname, './example/volume')
@@ -33,35 +36,35 @@ function snapshot (filename) {
   })
 }
 
-function walk () {
+function compile () {
+  let taker = new Undertaker()
 
-  return Promise.all([
-    /**
-     * text
-     */
-    new Promise((resolve, reject) => {
-      vfs.src(['./**/*.@(js|json|wxml|wxss)'], { cwd: CWD, nodir: true })
-        .pipe(snapshot(OUTPUT_VOLUME_FILENAME))
-        .pipe(vfs.dest(OUTPUT_ROOT))
-        .on('error', (error) => reject(error))
-        .on('end', () => resolve())
-    }),
-    /**
-     * buffer
-     */
-    new Promise((resolve, reject) => {
-      vfs.src(['./**/*.!(js|json|wxml|wxss)'], { cwd: CWD, nodir: true })
-        .pipe(vfs.dest(path.join(OUTPUT_ROOT, OUTPUT_STATIC_DIRNAME)))
-        .on('error', (error) => reject(error))
-        .on('end', () => resolve())
-    }),
-  ])
+  taker.task('clean', () => del([OUTPUT_ROOT]))
+
+  taker.task('walk:text', () =>
+    vfs.src(['./**/*.@(js|json|wxml|wxss)'], { cwd: CWD, nodir: true })
+      .pipe(snapshot(OUTPUT_VOLUME_FILENAME))
+      .pipe(vfs.dest(OUTPUT_ROOT))
+  )
+
+  taker.task('walk:buffer', () =>
+    vfs.src(['./**/*.!(js|json|wxml|wxss)'], { cwd: CWD, nodir: true })
+      .pipe(vfs.dest(path.join(OUTPUT_ROOT, OUTPUT_STATIC_DIRNAME)))
+  )
+
+  taker.task('walk', taker.parallel('walk:text', 'walk:buffer'))
+
+  taker.task('compile', taker.series('clean', 'walk'))
+
+  return co(function* () {
+    yield taker.series('compile')
+  })
 }
 
 /**
  * test
  */
 ;(async function () {
-  await walk()
+  await compile()
   console.log('done')
 })()
