@@ -1,0 +1,6 @@
+<view class="view">
+  <view class="count">Counter: {{ count }}</view>
+  <view class="paragraph"><button bindtap="add" type="primary">+1</button></view>
+  <view class="paragraph"><button bindtap="reset">Reset</button></view>
+  <view class="logo"><tina-logo class="tina" size="40px" /></view>
+</view>

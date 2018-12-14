@@ -1,0 +1,40 @@
+page, .view {
+  font-family: Arial;
+  background-color: #eee;
+}
+
+.view {
+  padding: 20px;
+
+}
+
+.view .count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    margin: 20px;
+  }
+
+.view .paragraph {
+    margin: 18px;
+  }
+
+.view .logo {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 20px;
+    font-size: 0;
+    opacity: 0.8
+  }
+
+.view .logo:active {
+  opacity: 1;
+}
+
+.view .logo .tina {
+      display: inline-block;
+      border-radius: 4px;
+      overflow: hidden;
+}

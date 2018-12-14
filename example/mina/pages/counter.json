@@ -1,0 +1,6 @@
+{
+  "name": "mina",
+  "usingComponents": {
+    "tina-logo": "../_/_node_modules_/@tinajs/tina-logo.mina/dist/index"
+  }
+}
